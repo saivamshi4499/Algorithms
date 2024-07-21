@@ -1,0 +1,111 @@
+Here's how the Boyer-Moore Voting Algorithm works:
+
+Initialize a candidate element and a counter:
+
+The candidate element is initially set to None.
+The counter is initially set to 0.
+Iterate through the array:
+
+For each element in the array:
+If the counter is 0, set the candidate element to the current element.
+If the current element is the same as the candidate element, increment the counter.
+If the current element is different from the candidate element, decrement the counter.
+The candidate element at the end of the iteration is the majority element.
+
+Question:
+Given an array nums of size n, return the majority element. The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+Solution:
+def majorityElement(self, nums: List[int]) -> int:
+        count = 0
+        result = None
+        for i in nums:
+            if(count==0):
+                count += 1
+                result = i
+            elif(result==i):
+                count += 1
+            else:
+                count -= 1
+        return result
+
+Question:
+Finding Elements Appearing More Than ⌊n / 3⌋ Times.
+
+Solution:
+def majority_elements_n_by_3(nums):
+    if not nums:
+        return []
+
+    # Initial candidates and counts
+    candidate1, candidate2, count1, count2 = None, None, 0, 0
+
+    for num in nums:
+        if candidate1 is not None and num == candidate1:
+            count1 += 1
+        elif candidate2 is not None and num == candidate2:
+            count2 += 1
+        elif count1 == 0:
+            candidate1, count1 = num, 1
+        elif count2 == 0:
+            candidate2, count2 = num, 1
+        else:
+            count1 -= 1
+            count2 -= 1
+
+    # Verify the candidates
+    result = []
+    for candidate in (candidate1, candidate2):
+        if nums.count(candidate) > len(nums) // 3:
+            result.append(candidate)
+
+    return result
+
+# Example usage:
+nums = [3, 2, 3, 2, 2]
+print(majority_elements_n_by_3(nums))  # Output: [2]
+
+Question:
+Finding Elements Appearing More Than ⌊n / k⌋ Times.
+
+Solution:
+def majority_elements_n_by_k(nums, k):
+    if not nums:
+        return []
+
+    # Initial candidates and counts
+    candidates = [None] * (k - 1)
+    counts = [0] * (k - 1)
+
+    for num in nums:
+        found = False
+        for i in range(k - 1):
+            if candidates[i] is not None and num == candidates[i]:
+                counts[i] += 1
+                found = True
+                break
+        
+        if not found:
+            for i in range(k - 1):
+                if counts[i] == 0:
+                    candidates[i], counts[i] = num, 1
+                    found = True
+                    break
+
+        if not found:
+            for i in range(k - 1):
+                counts[i] -= 1
+
+    # Verify the candidates
+    result = []
+    for candidate in candidates:
+        if nums.count(candidate) > len(nums) // k:
+            result.append(candidate)
+
+    return result
+
+# Example usage:
+nums = [1, 1, 1, 3, 3, 2, 2, 2]
+k = 3
+print(majority_elements_n_by_k(nums, k))  # Output: [1, 2]
+
